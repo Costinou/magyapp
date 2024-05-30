@@ -1,0 +1,2 @@
+# magyapp
+Learn hungarian
