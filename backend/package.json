@@ -1,0 +1,15 @@
+{
+  "name": "magyapp_backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "C",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

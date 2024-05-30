@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<script>
+    function swap(json){
+        var ret = {};
+        for(var key in json){
+            ret[json[key]] = key;
+        }
+        return ret;
+    }
+
+    let dictionnaire = swap({
+
+        /* Page un */
+
+        "ház" : "la maison",
+        "társasház" : "la résidence",
+        "lakás" : "l'appartement",
+        "földszint" : "rez-de-chaussée",
+        "lakotélep" : "HLM", 
+        "emelet" : "étage",
+        "kert" : "jardin",
+        "bejárati ajtó" : "la porte d'entrée",
+        "előszoba" : "l'entrée",
+        "folyosó" : "le couloir",
+        "nappali" : "le salon",
+        "konyha" : "la cuisine",
+        "étkező" : "la salle à manger",
+        "fürdőszoba" : "la salle de bain",
+
+        /* Page deux */
+
+        "wc" : "les toilettes",
+        "mosókonhya" : "la buanderie",
+        "pince" : "la cave",
+        "padlás" : "le grenier",
+        "hálószoba" : "la chambre à coucher",
+        "dolgozószoba" : "le bureau",
+        "gyerekszoba" : "la chambre des enfant",
+        "terasz" : "la terasse",
+        "balkon - erkély" : "le balcon",
+        "tető" : "le toit",
+        "ajto" : "la porte",
+        "ablak" : "la fenêtre",
+        "fal" : "le mur",
+        "padló" : "le sol",
+        "plafon" : "le plafond",
+        "lépcső" : "l'escalier"
+
+    });
+    
+
+</script>
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin: 0;
+            padding: 0;
+            background-color: #0A0903;
+            color: #FFC100;
+        }
+            #resultat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+            height: 100px; 
+            line-height: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<header>
+    <script>
+        // Make an HTTP GET request to retrieve the word list
+        fetch('/word_list')
+            .then(response => response.json())
+            .then(data => {
+                const wordListString = data.join(', ');
+                console.log(data);
+                document.getElementById("resultat").textContent = wordListString;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+</header>
+<body onclick="afficherMot()">
+    <p id="resultat"></p>
+
+    <script>
+        let bool_mot = false
+        let ran_word = ""
+        console.log("Init")
+
+        const motsFrancais = Object.keys(dictionnaire);
+
+        function afficherMot() {
+            console.log("Bool is " + bool_mot)
+            if (bool_mot == false){
+                const motFrancais = motsFrancais[Math.floor(Math.random() * motsFrancais.length)];
+                ran_word = motFrancais
+                document.getElementById("resultat").textContent = `${motFrancais}`;
+                bool_mot = true;
+            }
+            else{
+                bool_mot = false;
+                const traduction = dictionnaire[ran_word];
+                document.getElementById("resultat").textContent = `${traduction}`;
+            }
+        }
+    </script>
+</body>
+</html>
