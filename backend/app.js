@@ -12,7 +12,7 @@ app.listen(port, () => {
 });
 
 app.get('/word_list', (req, res) => {
-  fs.readdir('/home/c/Documents/_dev/magyarul/backend/word_list', (err, files) => {
+  fs.readdir('./word_list', (err, files) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -24,12 +24,43 @@ app.get('/word_list', (req, res) => {
 
 app.get('/word_list/:word', (req, res) => {
   const word = req.params.word;
-  fs.readFile(`/home/c/Documents/_dev/magyarul/backend/word_list/${word}`, 'utf8', (err, data) => {
+  console.log("get on /word_list/" + word);
+  fs.readFile(`./word_list/${word}`, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
     } else {
       res.send(data);
+    }
+    console.log(data);
+  });
+});
+
+app.get('/word_all', (req, res) => {
+  fs.readdir('./word_list', (err, files) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const fileContents = [];
+      files.forEach((file) => {
+        const filePath = `./word_list/${file}`;
+        fs.readFile(filePath, 'utf8', (err, data) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+          } else {
+            const jsonData = JSON.parse(data);
+            fileContents.push(jsonData);
+            if (fileContents.length === files.length) {
+              const mergedDictionary = fileContents.reduce((merged, dictionary) => {
+                return { ...merged, ...dictionary };
+              }, {});
+              res.json(mergedDictionary);
+            }
+          }
+        });
+      });
     }
   });
 });
