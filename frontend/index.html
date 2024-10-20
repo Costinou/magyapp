@@ -8,20 +8,71 @@
         }
         return ret;
     }
-
 </script>
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Magyapp</title>
     <style>
-        body {
-            min-height: 100vh; /* Use viewport height to ensure full height */
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Center children vertically */
-            align-items: center; /* Center children horizontally */
+
+        * {
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%; /* Le body et le html doivent occuper 100% de la hauteur */
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column; /* Alignez le header et le contenu de façon verticale */
+            justify-content: flex-start; /* Le header reste en haut */
+            height: 100vh; /* L'ensemble de la page doit occuper toute la hauteur de la fenêtre */
+        }
+
+        header {
+            background-color: #0A0903;
+            height: 5vh; /* Ajustez la hauteur du header selon vos besoins */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5 rem;
+            font-weight: bold;
+        }
+
+        .header-item {
+            padding: 10px;
+            background-color: #333;
+            border-radius: 0px;
+            color: #fff;
+            text-align: center;
+            cursor: pointer; /* Indique que c'est cliquable */
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Animation pour la transition */
+        }
+
+        .header-item:active {
+            transform: scale(1.1); /* Effet de zoom lors du clic */
+            background-color: #555; /* Changement de couleur lors du clic */
+        }
+
+        /* Optionnel : Animation de retour après la sélection */
+        .header-item.selected {
+            background-color: #555; /* Change la couleur lorsque l'élément est sélectionné */
+            transform: scale(1.05); /* Effet de léger zoom sur l'élément sélectionné */
+        }
+
+        div {
+            flex-grow: 1; /* Le div principal occupe tout l'espace restant sous le header */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             background-color: #0A0903;
             color: #FFC100;
         }
@@ -31,19 +82,65 @@
             align-items: center;
             font-size: 5rem;
             text-align: center;
+            user-select: none; 
         }
     </style>
 </head>
-<body onclick="afficherMot()" onkeydown="afficherMot()" >
-    <p id="resultat"></p>
-    <script>
-        let bool_mot = false
-        let ran_word = ""
-        let motsFrancais = []
-        console.log("Init")
 
-        let dictionnaire = {};
-        fetch('/word_all')
+<body>
+    <header id="dynamic-header">
+        <!-- Les items seront ajoutés ici -->
+    </header>
+    <script>
+
+    let rubrique = ""; // Variable pour stocker l'item sélectionné
+
+    console.log("Header")
+    async function fetchHeaderItems() {
+        const response = await fetch("/word_list");
+        const data = await response.json(); // suppose que la réponse est en JSON
+        console.log(data)
+        return data; // si les items sont dans une propriété "items"
+    }
+
+    // Fonction pour générer dynamiquement le contenu de l'entête
+    async function generateDynamicHeader() {
+        const header = document.getElementById("dynamic-header");
+
+        // Obtenir la liste des items depuis toto.com
+        const items = await fetchHeaderItems();
+
+        // Pour chaque item, créer un élément div dans l'entête
+        items.forEach(item => {
+            const itemDiv = document.createElement("div");
+            itemDiv.classList.add("header-item");
+            itemDiv.textContent = item;
+
+            // Ajouter un événement 'click' sur chaque item
+            itemDiv.addEventListener("click", () => selectItem(itemDiv, item));
+
+            header.appendChild(itemDiv);
+        });
+    }
+
+    // Fonction pour sélectionner un item
+    function selectItem(element, itemName) {
+        // Désélectionner tous les autres items
+        document.querySelectorAll('.header-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        // Sélectionner l'élément cliqué
+        element.classList.add('selected');
+
+        // Mettre à jour la variable rubrique avec le nom de l'item cliqué
+        rubrique = itemName;
+
+        // Mettre à jour l'affichage
+        //document.getElementById("selected-rubrique").textContent = "Rubrique sélectionnée : " + rubrique;
+        console.log(rubrique)
+
+        fetch('/word_list/'+rubrique)
             .then(response => response.json())
             .then(data => {
                 dictionnaire = swap(data);
@@ -53,22 +150,74 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
 
-        function afficherMot() {
-            console.log("Bool is " + bool_mot)
-            if (bool_mot == false){
-                const motFrancais = motsFrancais[Math.floor(Math.random() * motsFrancais.length)];
-                ran_word = motFrancais
-                document.getElementById("resultat").textContent = `${motFrancais}`;
-                bool_mot = true;
-            }
-            else{
-                bool_mot = false;
-                const traduction = dictionnaire[ran_word];
-                document.getElementById("resultat").textContent = `${traduction}`;
-                }
-            } 
-        
+    // Appeler la fonction pour générer l'entête lors du chargement de la page
+    window.onload = generateDynamicHeader;
     </script>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <div>
+        <body onclick="afficherMot()" onkeydown="afficherMot()" >
+            <p id="resultat"></p>
+            <script>
+                let bool_mot = false
+                let ran_word = ""
+                let motsFrancais = []
+                console.log("Init")
+
+                let dictionnaire = {};
+
+
+                fetch('/word_all')
+                    .then(response => response.json())
+                    .then(data => {
+                        dictionnaire = swap(data);
+                        
+                    motsFrancais = Object.keys(dictionnaire);
+                    console.log(motsFrancais)})
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
+                function afficherMot() {
+                    console.log("Bool is " + bool_mot)
+                    if (bool_mot == false){
+                        const motFrancais = motsFrancais[Math.floor(Math.random() * motsFrancais.length)];
+                        ran_word = motFrancais
+                        document.getElementById("resultat").textContent = `${motFrancais}`;
+                        bool_mot = true;
+                    }
+                    else{
+                        bool_mot = false;
+                        const traduction = dictionnaire[ran_word];
+                        document.getElementById("resultat").textContent = `${traduction}`;
+                        }
+                    } 
+                
+            </script>
+        </body>
+    </div>
 </body>
 </html>

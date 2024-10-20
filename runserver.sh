@@ -3,6 +3,10 @@
 # Set the application path
 APP_PATH="/opt/magyapp"
 
+if [ ! -d "$APP_PATH" ]; then
+    mkdir -p "$APP_PATH"
+fi
+
 # Create the log folder if it doesn't exist
 LOG_FOLDER="/var/log/magyapp"
 
