@@ -58,3 +58,5 @@ app.get('/word_all', (req, res) => {
       res.status(500).send(`An error occurred ${error}`);
   });
 });
+
+
