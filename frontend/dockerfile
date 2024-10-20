@@ -1,0 +1,24 @@
+# Dockerfile pour le Frontend (React/Vue/Angular)
+FROM node:18
+
+# Crée un répertoire de travail
+WORKDIR /usr/src/app
+
+# Copie package.json et package-lock.json
+COPY package*.json ./
+
+# Installe les dépendances
+RUN npm install
+
+# Copie le reste du code de l'application
+COPY . .
+
+# Ajouter REACT_APP_BACKEND_URL au moment du build
+ARG REACT_APP_BACKEND_URL
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+
+# Expose le port 8080
+EXPOSE 8080
+
+# Commande pour démarrer le serveur backend
+CMD ["node", "app.js"]

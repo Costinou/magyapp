@@ -2,9 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const port = 8080;
-const backend_url = 'http://localhost:3000';
 
-
+const backend_url = process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000';
 
 app.get('/index', (req, res) => {
   console.log('magyapp_front');
