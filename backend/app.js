@@ -30,7 +30,7 @@ app.get('/word_list', (req, res) => {
 
 app.get('/word_list/:word', (req, res) => {
   const word = req.params.word;
-  console.log("get on /word_list/" + word);
+  console.log("get on /word_list/"+word);
   fs.readFile(`./word_list/${word}`, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -38,7 +38,7 @@ app.get('/word_list/:word', (req, res) => {
     } else {
       res.send(data);
     }
-    console.log(data);
+    console.log("with " + Object.keys(JSON.parse(data)).length + " elements");
   });
 });
 
@@ -101,8 +101,6 @@ app.post('/add-words/:filename', (req, res) => {
   if (!filename.endsWith('.json')) {
     return res.status(400).json({ error: 'Le nom du fichier doit se terminer par .json' });
   }
-
-  
 
   // Écriture du fichier JSON accepté dans le répertoire ./word_list/
   const filePath = path.join(wordListDir, filename);
