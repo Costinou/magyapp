@@ -47,7 +47,6 @@ fi
 # Clone the repository and checkout the latest tag
 git clone https://github.com/Costinou/magyapp.git
 cd magyapp || exit
-latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
 git checkout "$latest_tag"
 
 # Set ownership back to root for security
