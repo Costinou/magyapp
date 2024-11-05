@@ -8,6 +8,7 @@
         }
         return ret;
     }
+
 </script>
 <head>
     <meta charset="UTF-8">
@@ -64,7 +65,7 @@
         /* Optionnel : Animation de retour après la sélection */
         .header-item.selected {
             background-color: #555; /* Change la couleur lorsque l'élément est sélectionné */
-            transform: scale(1.05); /* Effet de léger zoom sur l'élément sélectionné */
+            transform: scale(1.0); /* Effet de léger zoom sur l'élément sélectionné */
         }
 
         div {
@@ -92,12 +93,15 @@
         <!-- Les items seront ajoutés ici -->
     </header>
     <script>
-
+            
+    let profileSelected = "cospen"; // Variable pour stocker le profil sélectionné
     let rubrique = ""; // Variable pour stocker l'item sélectionné
+    // Generation du header et des rubriques
 
-    console.log("Header")
     async function fetchHeaderItems() {
-        const response = await fetch("/word_list");
+        console.log("Profile selected: ", profileSelected);
+        const response = await fetch(`/word_list/${profileSelected}`);
+        console.log(`get on /word_list/${profileSelected}`)
         const data = await response.json(); // suppose que la réponse est en JSON
         console.log(data)
         return data; // si les items sont dans une propriété "items"
@@ -105,7 +109,9 @@
 
     // Fonction pour générer dynamiquement le contenu de l'entête
     async function generateDynamicHeader() {
+        
         const header = document.getElementById("dynamic-header");
+        header.innerHTML = ""; // Clear the existing header content
 
         // Obtenir la liste des items depuis toto.com
         const items = await fetchHeaderItems();
@@ -140,7 +146,7 @@
         //document.getElementById("selected-rubrique").textContent = "Rubrique sélectionnée : " + rubrique;
         console.log(rubrique)
 
-        fetch('/word_list/'+rubrique)
+        fetch(`/word_list/${profileSelected}/${rubrique}`)
             .then(response => response.json())
             .then(data => {
                 dictionnaire = swap(data);
@@ -150,14 +156,91 @@
             .catch(error => {
                 console.error('Error:', error);
             });
-            bool_mot = true;
+            bool_mot = false;
             afficherMot();
     }
 
-    // Appeler la fonction pour générer l'entête lors du chargement de la page
-    window.onload = generateDynamicHeader;
+
+
+    // Generation du footer et des profils
+        async function fetchProfiles() {
+            const response = await fetch("/profiles");
+            const profiles = await response.json();
+            console.log(profiles);
+            return profiles;
+        }
+
+        async function generateProfileSelection() {
+            const profiles = await fetchProfiles();
+            const footer = document.createElement("footer");
+            footer.id = "dynamic-footer";
+            document.body.appendChild(footer);
+
+            profiles.forEach(profile => {
+            const profileDiv = document.createElement("div");
+            profileDiv.classList.add("profile-item");
+            profileDiv.textContent = profile;
+
+            profileDiv.addEventListener("click", () => selectProfile(profile));
+
+            footer.appendChild(profileDiv);
+            });
+        }
+
+        function selectProfile(profile) {
+            console.log("Selected profile:", profile);
+            if (profileSelected !== profile) {
+                profileSelected = profile;
+                fetchHeaderItems();
+                generateDynamicHeader();
+                dictionnaire = { "" : "" };
+            }
+        }
+        window.onload = () => {
+            generateDynamicHeader();
+            generateProfileSelection();
+        };
     </script>
 
+
+    <style>
+        .profile-item {
+            padding: 10px;
+            background-color: #333;
+            border-radius: 0px;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            margin: 5px;
+        }
+        footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0A0903; /* Assurez-vous que la couleur de fond du footer est la même que celle du body */
+            border: none; /* Supprime le contour blanc */
+        }
+
+        .profile-item:active {
+            transform: scale(1.1);
+            background-color: #555;
+        }
+
+        .profile-item.selected {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+
+        #profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+    </style>
+
     
 
 
@@ -176,10 +259,6 @@
 
 
 
-
-
-
-    
     <div>
         <body onclick="afficherMot()" onkeydown="afficherMot()" >
             <p id="resultat"></p>
@@ -190,18 +269,6 @@
                 console.log("Init")
 
                 let dictionnaire = {};
-
-
-                fetch('/word_all')
-                    .then(response => response.json())
-                    .then(data => {
-                        dictionnaire = swap(data);
-                        
-                    motsFrancais = Object.keys(dictionnaire);
-                    console.log(motsFrancais)})
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
 
                 function afficherMot() {
                     console.log("Bool is " + bool_mot)
@@ -221,5 +288,6 @@
             </script>
         </body>
     </div>
+    
 </body>
-</html>
+</html> 

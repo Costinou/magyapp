@@ -3,7 +3,7 @@ const fs = require('fs');
 const app = express();
 const port = 8080;
 
-const backend_url = process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000';
+const backend_url = 'http://localhost:3000'; // process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000'; // 
 
 app.get('/index', (req, res) => {
   console.log('magyapp_front');
@@ -15,8 +15,9 @@ app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`)
 });
 
-app.get('/word_list', (req, res) => {
-  const apiUrl = `${backend_url}/word_list`;
+
+app.get('/profiles', (req, res) => { 
+  const apiUrl = `${backend_url}/profiles`;
   console.log("get on " + apiUrl);
   fetch(apiUrl)
   .then(response => response.json())
@@ -30,9 +31,10 @@ app.get('/word_list', (req, res) => {
   });
 });
 
-app.get('/word_list/:word', (req, res) => {
-  const word = req.params.word;
-  const apiUrl = `${backend_url}/word_list/${word}`;
+app.get('/word_list/:profile', (req, res) => {
+  const profile = req.params.profile;
+  const apiUrl = `${backend_url}/word_list/${profile}`;
+  console.log("get on " + apiUrl);
   fetch(apiUrl)
   .then(response => response.json())
   .then(
@@ -45,6 +47,25 @@ app.get('/word_list/:word', (req, res) => {
   });
 });
 
+app.get('/word_list/:profile/:word', (req, res) => {
+  const profile = req.params.profile;
+  const word = req.params.word;
+  const apiUrl = `${backend_url}/word_list/${profile}/${word}`;
+  console.log("get on " + apiUrl);
+  fetch(apiUrl)
+  .then(response => response.json())
+  .then(
+      data => {
+      res.send(data);
+  })
+  .catch(error => {
+      console.error(error);
+      res.status(500).send(`An error occurred ${error}`);
+  });
+});
+
+
+/* ------------- Useless for now -------------
 app.get('/word_all', (req, res) => {
   const apiUrl = `${backend_url}/word_all`;
   fetch(apiUrl)
@@ -59,4 +80,4 @@ app.get('/word_all', (req, res) => {
   });
 });
 
-
+*/

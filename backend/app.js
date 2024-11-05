@@ -17,7 +17,7 @@ app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`)
 });
 
-app.get('/word_list', (req, res) => {
+app.get('/profiles', (req, res) => {
   fs.readdir('./word_list', (err, files) => {
     if (err) {
       console.error(err);
@@ -28,20 +28,37 @@ app.get('/word_list', (req, res) => {
   });
 });
 
-app.get('/word_list/:word', (req, res) => {
+app.get('/word_list/:profile', (req, res) => {
+  const profile = req.params.profile;
+  console.log(`get on /word_list/${profile}`);
+  fs.readdir(`./word_list/${profile}`, (err, files) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.send(files);
+    }
+  });
+});
+
+app.get('/word_list/:profile/:word', (req, res) => {
+  const profile = req.params.profile;
   const word = req.params.word;
-  console.log("get on /word_list/"+word);
-  fs.readFile(`./word_list/${word}`, 'utf8', (err, data) => {
+  console.log(`get on /${profile}/${word}`);
+  fs.readFile(`./word_list/${profile}/${word}`, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
     } else {
       res.send(data);
     }
-    console.log("with " + Object.keys(JSON.parse(data)).length + " elements");
+    console.log(`with ${Object.keys(JSON.parse(data)).length} elements`);
   });
 });
 
+
+
+/* ------------- Useless for now -------------
 app.get('/word_all', (req, res) => {
   fs.readdir('./word_list', (err, files) => {
     if (err) {
@@ -72,8 +89,9 @@ app.get('/word_all', (req, res) => {
 });
 
 
-// Add files process
 
+
+// Add files process
 // Route POST pour /add-words/nomdufichier.json
 app.post('/add-words/:filename', (req, res) => {
   const data = req.body;
@@ -121,3 +139,4 @@ app.post('/add-words/:filename', (req, res) => {
     res.status(200).json({ message: 'Fichier JSON accepté et sauvegardé.', file: filename });
   });
 });
+*/
