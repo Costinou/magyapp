@@ -45,6 +45,7 @@
             color: white;
             font-size: 1.5 rem;
             font-weight: bold;
+            border: none;
         }
 
         .header-item {
@@ -58,15 +59,12 @@
         }
 
         .header-item:active {
-            transform: scale(1.1); /* Effet de zoom lors du clic */
             background-color: #555; /* Changement de couleur lors du clic */
         }
 
-        /* Optionnel : Animation de retour après la sélection */
         .header-item.selected {
             background-color: #555; /* Change la couleur lorsque l'élément est sélectionné */
-            transform: scale(1.0); /* Effet de léger zoom sur l'élément sélectionné */
-        }
+            }
 
         div {
             flex-grow: 1; /* Le div principal occupe tout l'espace restant sous le header */
@@ -75,8 +73,9 @@
             justify-content: center;
             align-items: center;
             background-color: #0A0903;
-            color: #FFC100;
+            color: #FFC100; /* Couleur du texte */
         }
+
         #resultat {
             display: flex;
             justify-content: center;
@@ -84,6 +83,16 @@
             font-size: 5rem;
             text-align: center;
             user-select: none; 
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0A0903; /* Assurez-vous que la couleur de fond du footer est la même que celle du body */
+            border: none; /* Supprime le contour blanc */
         }
     </style>
 </head>
@@ -178,7 +187,7 @@
 
             profiles.forEach(profile => {
             const profileDiv = document.createElement("div");
-            profileDiv.classList.add("profile-item");
+            profileDiv.classList.add("header-item");
             profileDiv.textContent = profile;
 
             profileDiv.addEventListener("click", () => selectProfile(profile));
@@ -202,92 +211,35 @@
         };
     </script>
 
+    <script>
+        let bool_mot = false
+        let ran_word = ""
+        let motsFrancais = []
+        console.log("Init")
 
-    <style>
-        .profile-item {
-            padding: 10px;
-            background-color: #333;
-            border-radius: 0px;
-            color: #fff;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            margin: 5px;
-        }
-        footer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #0A0903; /* Assurez-vous que la couleur de fond du footer est la même que celle du body */
-            border: none; /* Supprime le contour blanc */
-        }
+        let dictionnaire = {};
 
-        .profile-item:active {
-            transform: scale(1.1);
-            background-color: #555;
-        }
-
-        .profile-item.selected {
-            background-color: #555;
-            transform: scale(1.05);
-        }
-
-        #profile-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 20px;
-        }
-    </style>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        function afficherMot() {
+            console.log("Bool is " + bool_mot)
+            if (bool_mot == false){
+                const motFrancais = motsFrancais[Math.floor(Math.random() * motsFrancais.length)];
+                ran_word = motFrancais
+                document.getElementById("resultat").textContent = `${motFrancais}`;
+                bool_mot = true;
+            }
+            else{
+                bool_mot = false;
+                const traduction = dictionnaire[ran_word];
+                document.getElementById("resultat").textContent = `${traduction}`;
+                }
+            } 
+        
+    </script>
 
     <div>
-        <body onclick="afficherMot()" onkeydown="afficherMot()" >
+        <body onclick="afficherMot()" >
             <p id="resultat"></p>
-            <script>
-                let bool_mot = false
-                let ran_word = ""
-                let motsFrancais = []
-                console.log("Init")
-
-                let dictionnaire = {};
-
-                function afficherMot() {
-                    console.log("Bool is " + bool_mot)
-                    if (bool_mot == false){
-                        const motFrancais = motsFrancais[Math.floor(Math.random() * motsFrancais.length)];
-                        ran_word = motFrancais
-                        document.getElementById("resultat").textContent = `${motFrancais}`;
-                        bool_mot = true;
-                    }
-                    else{
-                        bool_mot = false;
-                        const traduction = dictionnaire[ran_word];
-                        document.getElementById("resultat").textContent = `${traduction}`;
-                        }
-                    } 
-                
-            </script>
         </body>
     </div>
-    
 </body>
 </html> 
