@@ -7,7 +7,7 @@ const port = 8080;
 app.use(express.static(__dirname));
 
 
-const backend_url = 'http://localhost:3000'; // process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000'; // 
+const backend_url = process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000'; // 'http://localhost:3000'; //
 
 
 app.listen(port, () => {
