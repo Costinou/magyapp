@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "build-css": "tailwindcss build src/tail_styles.css -o styles.css",
     "start": "node server.js"
   },
   "keywords": [],

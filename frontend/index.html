@@ -14,94 +14,13 @@
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <title>Magyapp</title>
-    <style>
-
-        * {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            height: 100%; /* Le body et le html doivent occuper 100% de la hauteur */
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column; /* Alignez le header et le contenu de façon verticale */
-            justify-content: flex-start; /* Le header reste en haut */
-            height: 100vh; /* L'ensemble de la page doit occuper toute la hauteur de la fenêtre */
-        }
-
-        header {
-            background-color: #0A0903;
-            height: 5vh; /* Ajustez la hauteur du header selon vos besoins */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5 rem;
-            font-weight: bold;
-            border: none;
-        }
-
-        .header-item {
-            padding: 10px;
-            background-color: #333;
-            border-radius: 0px;
-            color: #fff;
-            text-align: center;
-            cursor: pointer; /* Indique que c'est cliquable */
-            transition: transform 0.3s ease, background-color 0.3s ease; /* Animation pour la transition */
-        }
-
-        .header-item:active {
-            background-color: #555; /* Changement de couleur lors du clic */
-        }
-
-        .header-item.selected {
-            background-color: #555; /* Change la couleur lorsque l'élément est sélectionné */
-            }
-
-        div {
-            flex-grow: 1; /* Le div principal occupe tout l'espace restant sous le header */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #0A0903;
-            color: #FFC100; /* Couleur du texte */
-        }
-
-        #resultat {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 5rem;
-            text-align: center;
-            user-select: none; 
-        }
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #0A0903; /* Assurez-vous que la couleur de fond du footer est la même que celle du body */
-            border: none; /* Supprime le contour blanc */
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
-<body>
-    <header id="dynamic-header">
-        <!-- Les items seront ajoutés ici -->
-    </header>
-    <script>
+<script>
+
+    let elementCSS = "transition duration-300 ease-in-out transform hover:scale-105 text-center rounded-lg cursor-pointer bg-[#FFD166] hover:bg-[#FFEB99]";
+            
             
     let profileSelected = "cospen"; // Variable pour stocker le profil sélectionné
     let rubrique = ""; // Variable pour stocker l'item sélectionné
@@ -128,8 +47,8 @@
         // Pour chaque item, créer un élément div dans l'entête
         items.forEach(item => {
             const itemDiv = document.createElement("div");
-            itemDiv.classList.add("header-item");
-            itemDiv.textContent = item;
+            itemDiv.classList.add("element-header");
+            itemDiv.textContent = item.replace(/\.json$/, "");
 
             // Ajouter un événement 'click' sur chaque item
             itemDiv.addEventListener("click", () => selectItem(itemDiv, item));
@@ -181,17 +100,14 @@
 
         async function generateProfileSelection() {
             const profiles = await fetchProfiles();
-            const footer = document.createElement("footer");
-            footer.id = "dynamic-footer";
-            document.body.appendChild(footer);
+            
+            const footer = document.getElementById("dynamic-footer");
 
             profiles.forEach(profile => {
             const profileDiv = document.createElement("div");
-            profileDiv.classList.add("header-item");
+            profileDiv.classList.add("element-footer");
             profileDiv.textContent = profile;
-
             profileDiv.addEventListener("click", () => selectProfile(profile));
-
             footer.appendChild(profileDiv);
             });
         }
@@ -209,9 +125,7 @@
             generateDynamicHeader();
             generateProfileSelection();
         };
-    </script>
 
-    <script>
         let bool_mot = false
         let ran_word = ""
         let motsFrancais = []
@@ -235,11 +149,15 @@
             } 
         
     </script>
-
-    <div>
-        <body onclick="afficherMot()" >
-            <p id="resultat"></p>
-        </body>
-    </div>
-</body>
-</html> 
+    
+    <body class="bg-color-main1" >
+        <header id="dynamic-header" class="h-10 bg-color-main1 place-items-center font-bold flex space-x-4 justify-center"></header>
+        </header>
+        <div>
+            <body onclick="afficherMot()" class="flex items-center justify-center select-none"></body>
+                <p id="resultat" class="text-center font-bold text-7xl text-color-font-main1 flex items-center justify-center h-screen">Cliquez pour commencer</p>
+            </body>
+        </div>
+        <footer id="dynamic-footer" class="h-10 bottom-0 w-full fixed bg-color-main1 justify-between place-items-center font-bold flex px-4"></footer>
+    </body>     
+</html>

@@ -3,16 +3,26 @@ const fs = require('fs');
 const app = express();
 const port = 8080;
 
-const backend_url = process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000'; // 'http://localhost:3000'; // 
+// css
+app.use(express.static(__dirname));
+
+
+const backend_url = 'http://localhost:3000'; // process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000'; // 
+
+
+app.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`)
+});
+
+app.get('/', (req, res) => {
+  res.redirect('/index');
+});
+
 
 app.get('/index', (req, res) => {
   console.log('magyapp_front');
   const indexHtml = fs.readFileSync('index.html', 'utf8');
   res.send(indexHtml);
-});
-
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`)
 });
 
 

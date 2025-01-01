@@ -1,0 +1,34 @@
+@config "./../tailwind.config.js";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.element-header {
+    @apply transition duration-300 ease-in-out transform hover:scale-105 text-center rounded-lg cursor-pointer bg-color-main2 hover:bg-color-main3;
+    display: inline-block;
+    width: 100%;
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    line-height: 2rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.element-footer {
+    @apply transition duration-300 ease-in-out transform hover:scale-105 text-center rounded-lg cursor-pointer bg-color-main2 hover:bg-color-main3 active:bg-color-main4;
+    display: inline-block;
+    width: 100%;
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    line-height: 2rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
