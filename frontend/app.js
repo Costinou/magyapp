@@ -2,10 +2,12 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const port = 8080;
+const favicon = require('serve-favicon');
+const path = require('path');
 
 // css
 app.use(express.static(__dirname));
-
+app.use(favicon(path.join(__dirname, 'magyapp.ico')));
 
 const backend_url = process.env.REACT_APP_BACKEND_URL; // || 'http://backend:3000'; // 'http://localhost:3000'; //
 
